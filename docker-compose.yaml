@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  backend-service:
+    image: backend-service
+    build:
+      dockerfile: wearu/backend-service/Dockerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION}
+        POETRY_VERSION: ${POETRY_VERSION}
+        PIPX_VERSION: ${PIPX_VERSION}
+        BACKEND_SERVICE_PORT: ${BACKEND_SERVICE_PORT}
+    container_name: backend-service
+    depends_on: [vector-database]
+    environment:
+      - TEXT_INFERENCE_ENDPOINT=http://text-inference-service:${TEXT_INFERENCE_SERVICE_PORT}/compute_text_embedding
+      - IMAGE_INFERENCE_ENDPOINT=http://image-inference-service:${IMAGE_INFERENCE_SERVICE_PORT}/compute_image_embedding
+      - VECTOR_DATABASE_URL=http://vector-database:${VECTOR_DATABASE_PORT}
+      - COLLECTION_NAME=${COLLECTION_NAME}
+    volumes:
+      - ${STATIC_FILES_HOST_DIR}:/static
+    ports:
+      - ${BACKEND_SERVICE_PORT}:${BACKEND_SERVICE_PORT}
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 2GB
+  vector-database:
+    image: qdrant/qdrant:latest
+    container_name: vector-database
+    volumes:
+      - ./vector-database/storage:/qdrant/storage
+      - ./vector-database/snapshots:/qdrant/snapshots
+    expose:
+      - ${VECTOR_DATABASE_PORT}:${VECTOR_DATABASE_PORT}
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 2GB
+  text-inference-service:
+    image: text-inference-service
+    build:
+      dockerfile: wearu/text-inference-service/Dockerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION}
+        POETRY_VERSION: ${POETRY_VERSION}
+        PIPX_VERSION: ${PIPX_VERSION}
+        TEXT_INFERENCE_SERVICE_PORT: ${TEXT_INFERENCE_SERVICE_PORT}
+    container_name: text-inference-service
+    expose:
+      - ${TEXT_INFERENCE_SERVICE_PORT}:${TEXT_INFERENCE_SERVICE_PORT}
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 2GB
+  image-inference-service:
+    image: image-inference-service
+    build:
+      dockerfile: wearu/image-inference-service/Dockerfile
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION}
+        POETRY_VERSION: ${POETRY_VERSION}
+        PIPX_VERSION: ${PIPX_VERSION}
+        IMAGE_INFERENCE_SERVICE_PORT: ${IMAGE_INFERENCE_SERVICE_PORT}
+    container_name: image-inference-service
+    expose:
+      - ${IMAGE_INFERENCE_SERVICE_PORT}:${IMAGE_INFERENCE_SERVICE_PORT}
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 2GB

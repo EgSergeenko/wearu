@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "wearu"
+version = "0.1.0"
+description = ""
+authors = ["Egor Sergeenko <es.egor.sergeenko@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.12"
+fastapi = "0.104.1"
+uvicorn = "0.24.0.post1"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+mypy = "1.7.0"
+pylint = "3.0.2"
+
+[tool.poetry.group.inference]
+optional = true
+
+[tool.poetry.group.inference.dependencies]
+torch = {version = "2.1.1", source = "torch"}
+transformers = "4.35.2"
+optimum = "1.14.1"
+onnxruntime = "1.16.2"
+onnx = "1.15.0"
+
+[tool.poetry.group.image]
+optional = true
+
+[tool.poetry.group.image.dependencies]
+pillow = "10.1.0"
+python-multipart = "0.0.6"
+
+[tool.poetry.group.backend]
+optional = true
+
+[tool.poetry.group.backend.dependencies]
+qdrant-client = "1.6.2"
+httpx = "0.25.1"
+python-multipart = "0.0.6"
+
+[[tool.poetry.source]]
+name = "torch"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
