@@ -9,6 +9,7 @@ readme = "README.md"
 python = "3.10.12"
 fastapi = "0.104.1"
 uvicorn = "0.24.0.post1"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev]
 optional = true
@@ -16,6 +17,7 @@ optional = true
 [tool.poetry.group.dev.dependencies]
 mypy = "1.7.0"
 pylint = "3.0.2"
+wemake-python-styleguide = "^0.18.0"
 
 [tool.poetry.group.inference]
 optional = true
@@ -23,7 +25,6 @@ optional = true
 [tool.poetry.group.inference.dependencies]
 torch = {version = "2.1.1", source = "torch"}
 transformers = "4.35.2"
-optimum = "1.14.1"
 onnxruntime = "1.16.2"
 onnx = "1.15.0"
 
