@@ -112,7 +112,7 @@ async def search_text(
 
     search_results = await request.state.database_client.search(
         collection_name=config['COLLECTION_NAME'],
-        query_vector=('text', response.json()),
+        query_vector=('image', response.json()),
         limit=limit,
         offset=offset,
     )
