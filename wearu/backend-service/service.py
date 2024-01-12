@@ -7,6 +7,7 @@ from fastapi import Depends, FastAPI, File, Request
 from httpx import AsyncClient
 from pydantic import BaseModel
 from qdrant_client import AsyncQdrantClient
+from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 
 
@@ -85,6 +86,14 @@ async def load_resources(app: FastAPI) -> AsyncGenerator[Resources, None]:
 backend_service = FastAPI(lifespan=load_resources)
 backend_service.mount(
     '/static', StaticFiles(directory='/static'), name='static',
+)
+
+backend_service.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 
