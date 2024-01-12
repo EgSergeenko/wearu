@@ -88,7 +88,7 @@ backend_service.mount(
 )
 
 
-@backend_service.get('/items/{item_id}')
+@backend_service.post('/items/{item_id}')
 async def get_item(
     item_id: int, request: Request, config: Config = Depends(get_config),
 ) -> Item:
